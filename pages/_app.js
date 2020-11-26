@@ -1,7 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 
-import GlobalStyles from '../style/GlobalStyles';
+import GlobalStyles from '../style/Globalstyles';
 
 const App = ({ Component }) => {
     return (
