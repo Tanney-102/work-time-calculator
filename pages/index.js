@@ -174,7 +174,7 @@ const Home = () => {
     return (
         <Main style={{minHeight:winSize[1]}}>
             {resultPage ?
-            <div style={{width:'60%'}}>
+            <div style={{width:'400px'}}>
                 {/* <button onClick={btnTest}>test</button> */}
                 {workerList.map((v, i) => {
                     return (
