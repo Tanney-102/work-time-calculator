@@ -102,7 +102,6 @@ const Home = () => {
     };
 
     const getResult = () => {
-        alert('결과보기 버튼 클릭');
         mainFile.sort((a, b) => {
             if(a[0] < b[0]) {
                 return -1;
@@ -119,13 +118,15 @@ const Home = () => {
             }
         });
 
-
-        alert(mainFile[0]);
-
         const workers = []; // array of Worker
         let idx = 0;
         while(idx < mainFile.length) {
             const name = mainFile[idx][0];
+            if(name === 'UNKNOWN') {
+                idx++;
+                continue;
+            }
+
             const rows = []
             const _worker = new Worker(name);
 
