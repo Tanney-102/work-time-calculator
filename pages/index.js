@@ -119,6 +119,9 @@ const Home = () => {
             }
         });
 
+
+        alert(mainFile[0]);
+
         const workers = []; // array of Worker
         let idx = 0;
         while(idx < mainFile.length) {
