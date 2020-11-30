@@ -69,6 +69,7 @@ const Home = () => {
     const [mainFile, setMainFile] = useState(null);
     const [workerList, setWorkerList] = useState(null);
     const [resultPage, setResultPage] = useState(false);
+    const [fileUploaded, setFileUploaded] = useState(false);
 
     const parseFile = (e) => {
         const reader = new FileReader();
@@ -96,6 +97,7 @@ const Home = () => {
             setMainFile(mainSheet);
         }
         
+        alert(`${e.target.files[0].name}이 정상적으로 업로드 되었습니다`);
         reader.readAsBinaryString(e.target.files[0]);
     };
 
