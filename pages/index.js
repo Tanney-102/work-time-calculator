@@ -102,6 +102,7 @@ const Home = () => {
     };
 
     const getResult = () => {
+        alert('결과보기 버튼 클릭');
         mainFile.sort((a, b) => {
             if(a[0] < b[0]) {
                 return -1;
