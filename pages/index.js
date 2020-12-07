@@ -41,9 +41,10 @@ const Button = styled.button`
 function Worker(name) {
     this.name = name;
     this.workTime = [];
+    this.bound = [];
 
     this.getSum = () => {
-        return this.workTime.reduce((result, data) => {
+        return this.workTime.reduce((result, data, b_idx) => {
             return result + data.reduce((_res, _d, i) => {
                 if(_d === 0 && data[i-1] === 1) {
                     _res--;
@@ -51,7 +52,7 @@ function Worker(name) {
                     _res--;
                 }
                 return _res + _d;
-            }, 0)/2;
+            }, 0)/2 - this.bound[b_idx]/2;
         }, 0);
     }
 }
@@ -73,7 +74,6 @@ const Home = () => {
 
     const parseFile = (e) => {
         const reader = new FileReader();
-        console.log('test');
     
         reader.onload = () => {
             const fileData =  reader.result;
@@ -142,6 +142,9 @@ const Home = () => {
                     if(_worker.workTime[cur+1] === undefined) {
                         _worker.workTime.push(Array(49).fill(0));
                     }
+                    if(_worker.bound[cur+1] === undefined) {
+                        _worker.bound.push(0);
+                    }
                     curDay = beginDay;
                     cur++;
                 }
@@ -150,6 +153,12 @@ const Home = () => {
                 const endTime = parseInt(row[2].split(' ')[2].split(':')[0]) + (row[2].split(' ')[2].split(':')[1] == 0 ? 0 : 0.5);
 
                 if(beginDay === endDay) {
+                    if(beginTime !== 0 && _worker.workTime[cur][beginTime*2] === 0 && _worker.workTime[cur][beginTime*2 - 1] === 1) {
+                        _worker.bound[cur]++;
+                    }
+                    if(endTime !== 48 && _worker.workTime[cur][endTime*2] === 0 && _worker.workTime[cur][endTime*2 + 1] === 1) {
+                        _worker.bound[cur]++;
+                    }
                     for(let i=beginTime*2; i<=endTime*2; i++) {
                         _worker.workTime[cur][i] = 1;
                     }
@@ -157,7 +166,16 @@ const Home = () => {
                     if(_worker.workTime[cur+1] === undefined) {
                         _worker.workTime.push(Array(49).fill(0));
                     }
+                    if(_worker.bound[cur+1] === undefined) {
+                        _worker.bound.push(0);
+                    }
 
+                    if(beginTime !== 0 && _worker.workTime[cur][beginTime*2] === 0 && _worker.workTime[cur][beginTime*2 - 1] === 1) {
+                        _worker.bound[cur]++;
+                    }
+                    if(endTime !== 48 && _worker.workTime[cur+1][endTime*2] === 0 && _worker.workTime[cur+1][endTime*2 + 1] === 1) {
+                        _worker.bound[cur]++;
+                    }
                     for(let i=beginTime*2; i<49; i++) {
                         _worker.workTime[cur][i] = 1;
                     }
@@ -181,29 +199,65 @@ const Home = () => {
     return (
         <Main style={{minHeight:winSize[1]}}>
             {resultPage ?
-            <div style={{width:'400px'}}>
-                {/* <button onClick={btnTest}>test</button> */}
-                {workerList.map((v, i) => {
-                    return (
-                        <div style={{
+            <div style={{width:'400px', margin:'80px 0'}}>
+                <table>
+                    <thead>
+                        <tr style={{
                             display:'flex',
-                            border:'1px solid #bfbfbf'
+                            width:'400px',
+                            height:'20px',
                         }}>
-                            <div style={{
-                                width:'60%',  
+                            <th style={{
+                                display:'flex',
+                                justifyContent:'center',
+                                alignItems:'center',
+                                width:'60%',
                                 border:'1px solid #bfbfbf'
                             }}>
-                                {v.name}
-                            </div>
-                            <div style={{
-                                width:'40%',  
+                                이름
+                            </th>
+                            <th style={{
+                                display:'flex',
+                                justifyContent:'center',
+                                alignItems:'center',
+                                width:'40%',
                                 border:'1px solid #bfbfbf'
-                            }}> 
-                                {v.getSum()}
-                            </div>
-                        </div>
-                    );
-                })}
+                            }}>
+                                근무 시간
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {workerList.map((v, i) => {
+                            return (
+                                <tr style={{
+                                    display:'flex',
+                                    width:'400px',
+                                    height: '30px'
+                                }}>
+                                    <td style={{
+                                        display:'flex',
+                                        justifyContent:'center',
+                                        alignItems:'center',
+                                        width:'60%',  
+                                        border:'1px solid #bfbfbf'
+                                    }}>
+                                        {v.name}
+                                    </td>
+                                    <td style={{
+                                        display:'flex',
+                                        justifyContent:'center',
+                                        alignItems:'center',
+                                        width:'40%',  
+                                        border:'1px solid #bfbfbf'
+                                    }}> 
+                                        {v.getSum()}
+                                    </td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
             </div> :
             <>
             <FileInput>
